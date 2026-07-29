@@ -1,5 +1,5 @@
 
-const deals = [
+const demoDeals = [
   {id:1,name:"SYSTEMTREFF Gaming PC – Ryzen 7, RTX 5070, 32 GB, 1 TB",store:"Amazon Marketplace",country:"DE",condition:"new",price:1399,reference:1699,shipping:29,trust:88,errorRisk:18,url:"https://www.amazon.de/",reason:"Piyasa ortalamasının belirgin altında; ekran kartı seviyesi ve 32 GB RAM bu fiyatı güçlü kılıyor."},
   {id:2,name:"VIST Gaming PC – Ryzen 7 5700X, RTX 5060 Ti, 32 GB, 1 TB",store:"Cdiscount",country:"FR",condition:"new",price:1235,reference:1499,shipping:0,trust:82,errorRisk:12,url:"https://www.cdiscount.com/",reason:"Fransa içi ücretsiz kargo ve dengeli donanım. AM4 platformu nedeniyle yükseltme payı daha sınırlı."},
   {id:3,name:"Lenovo Legion 5 – RTX 5070, 16 GB, 1 TB",store:"MediaMarkt",country:"ES",condition:"new",price:1449,reference:1799,shipping:24,trust:91,errorRisk:10,url:"https://www.mediamarkt.es/",reason:"Taşınabilir sistem isteyenler için güçlü seçenek. RAM yükseltilebilirliği kontrol edilmeli."},
@@ -12,6 +12,9 @@ const deals = [
   {id:10,name:"Lenovo Legion 5 – RTX 5060 Ti, 32 GB, 1 TB",store:"Hepsiburada",country:"TR",condition:"new",price:1310,reference:1575,shipping:0,trust:86,errorRisk:14,url:"https://www.hepsiburada.com/",reason:"Türkiye içi kargo avantajı olan örnek liste. Gerçek mağaza bağlantısı sonraki veri entegrasyonunda ürün sayfasına yönlendirilecektir."},
   {id:11,name:"RTX 4070 Super oyuncu bilgisayarı – 32 GB, 1 TB",store:"Sahibinden",country:"TR",condition:"used",price:1080,reference:1480,shipping:25,trust:65,errorRisk:46,url:"https://www.sahibinden.com/",reason:"İkinci el örnek ilan. Fatura, seri numarası, yerinde test ve güvenli ödeme kontrolü yapılmalı."},
 ];
+
+let activeDeals = [...demoDeals];
+let liveRequestId = 0;
 
 const countryNames = {FR:"Fransa",DE:"Almanya",IT:"İtalya",ES:"İspanya",NL:"Hollanda",TR:"Türkiye"};
 const euro = new Intl.NumberFormat("tr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:0});
@@ -68,12 +71,51 @@ function currentParams(){
   return p;
 }
 
+function apiUrl(path){
+  const base = String(window.DEAL_RADAR_CONFIG?.apiBaseUrl || "").replace(/\/$/, "");
+  return `${base}${path}`;
+}
+
+function setLoading(message="Canlı fırsatlar aranıyor…"){
+  els.results.innerHTML = `<div class="empty">${message}</div>`;
+  els.resultCount.textContent = "Aranıyor";
+  els.bestDrop.textContent = "—";
+  els.bestScore.textContent = "—";
+}
+
+async function searchLiveDeals(){
+  const query = els.query.value.trim();
+  const country = els.country.value;
+  if(query.length < 2 || country === "all" || country === "TR"){
+    activeDeals = [...demoDeals];
+    applyFilters();
+    return;
+  }
+
+  const requestId = ++liveRequestId;
+  setLoading();
+  try{
+    const response = await fetch(apiUrl(`/api/search?q=${encodeURIComponent(query)}&country=${encodeURIComponent(country)}&limit=24`));
+    const payload = await response.json().catch(()=>({}));
+    if(requestId !== liveRequestId) return;
+    if(!response.ok) throw new Error(payload.error || `HTTP_${response.status}`);
+    activeDeals = Array.isArray(payload.items) ? payload.items : [];
+    applyFilters();
+  }catch(error){
+    if(requestId !== liveRequestId) return;
+    activeDeals = [...demoDeals];
+    applyFilters();
+    els.activeFilterText.textContent += " • Canlı bağlantı kurulamadı, örnek veriler gösteriliyor";
+    console.warn("Deal Radar live search failed:", error);
+  }
+}
+
 function applyFilters(){
   const q = els.query.value.trim().toLowerCase();
   const max = Number(els.maxPrice.value || Infinity);
   const minDrop = Number(els.minDrop.value || 0);
 
-  let filtered = deals.filter(d => {
+  let filtered = activeDeals.filter(d => {
     const haystack = `${d.name} ${d.store} ${countryNames[d.country]}`.toLowerCase();
     return (!q || haystack.includes(q))
       && (els.country.value==="all" || d.country===els.country.value)
@@ -116,11 +158,14 @@ function render(items){
     node.querySelector(".score").textContent = `${calcScore(d)}/100`;
     node.querySelector(".product-name").textContent = d.name;
     node.querySelector(".store-name").textContent = d.store;
-    node.querySelector(".old-price").textContent = euro.format(d.reference);
-    node.querySelector(".current-price").textContent = euro.format(d.price);
+    const formatter = d.currency && d.currency !== "EUR"
+      ? new Intl.NumberFormat("tr-FR",{style:"currency",currency:d.currency,maximumFractionDigits:0})
+      : euro;
+    node.querySelector(".old-price").textContent = formatter.format(d.reference);
+    node.querySelector(".current-price").textContent = formatter.format(d.price);
     node.querySelector(".drop-badge").textContent = `-%${calcDrop(d)}`;
-    node.querySelector(".shipping").textContent = d.shipping ? euro.format(d.shipping) : "Ücretsiz";
-    node.querySelector(".total").textContent = euro.format(total(d));
+    node.querySelector(".shipping").textContent = d.shipping ? formatter.format(d.shipping) : "Ücretsiz";
+    node.querySelector(".total").textContent = formatter.format(total(d));
     node.querySelector(".trust").textContent = `${d.trust}/100`;
     const signal = node.querySelector(".signal");
     signal.textContent = d.errorRisk >= 50 ? "Yüksek risk" : d.errorRisk >= 35 ? "Kontrol et" : "Normal";
@@ -142,9 +187,14 @@ function render(items){
   });
 }
 
-els.applyBtn.addEventListener("click", applyFilters);
-[els.query,els.country,els.condition,els.maxPrice,els.minDrop,els.sortBy,els.errorOnly]
-  .forEach(el=>el.addEventListener(el.tagName==="INPUT" && el.type==="search" ? "input":"change", applyFilters));
+els.applyBtn.addEventListener("click", searchLiveDeals);
+els.query.addEventListener("input", applyFilters);
+els.country.addEventListener("change", ()=> els.query.value.trim().length >= 2 ? searchLiveDeals() : applyFilters());
+[els.condition,els.maxPrice,els.minDrop,els.sortBy,els.errorOnly]
+  .forEach(el=>el.addEventListener("change", applyFilters));
+els.query.addEventListener("keydown", event=>{
+  if(event.key === "Enter") searchLiveDeals();
+});
 
 els.shareBtn.addEventListener("click", async ()=>{
   applyFilters();

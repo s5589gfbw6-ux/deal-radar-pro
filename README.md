@@ -1,19 +1,16 @@
 # Deal Radar Pro
 
-Avrupa genelinde ürün fiyatlarını, gerçek fiyat düşüşlerini ve toplam maliyeti karşılaştırmak için hazırlanmış mobil uyumlu PWA prototipi.
+Mevcut tasarımı değiştirmeden çalışan fırsat arama uygulaması.
 
-## Özellikler
-- Fransa, Almanya, İtalya, İspanya, Hollanda ve Türkiye
-- Ürün, ülke, durum, maksimum fiyat ve minimum düşüş filtresi
-- Fırsat skoru
-- Yanlış fiyat olasılığı filtresi
-- Paylaşılabilir arama bağlantısı
-- PWA ve çevrimdışı açılış
-- Mobil uyumlu arayüz
+## Canlı veri entegrasyonu
 
-## GitHub Pages ile yayınlama
-1. Bu dosyaların tamamını repository köküne yükleyin.
-2. GitHub repository içinde `Settings` → `Pages` bölümüne gidin.
-3. `Deploy from a branch` seçin.
-4. Branch: `main`, Folder: `/ (root)` seçin.
-5. Kaydedin.
+Bu sürümde `/api/search` sunucusuz uç noktası eBay Browse API üzerinden Fransa, Almanya, İtalya, İspanya ve Hollanda için canlı ürün araması yapar.
+
+Gerekli Vercel ortam değişkenleri:
+
+- `EBAY_CLIENT_ID`
+- `EBAY_CLIENT_SECRET`
+
+GitHub Pages ön yüzü kullanılacaksa `config.js` içindeki `apiBaseUrl` alanına Vercel adresi yazılır. Tüm depo Vercel'de yayınlanırsa alan boş kalabilir.
+
+Türkiye verileri, Türkiye mağazası için izinli API/affiliate erişimi bağlanana kadar mevcut örnek veriyle çalışır.
