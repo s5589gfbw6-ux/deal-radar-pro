@@ -7,10 +7,13 @@ const deals = [
   {id:5,name:"HP Omen 35L – RTX 5060 Ti 16 GB, Ryzen 7, 32 GB",store:"Bol.com",country:"NL",condition:"new",price:1299,reference:1549,shipping:18,trust:90,errorRisk:8,url:"https://www.bol.com/",reason:"16 GB VRAM yapay zekâ ve uzun vadeli kullanım için avantajlı."},
   {id:6,name:"MSI Katana 17 – RTX 5070, Core Ultra 7, 32 GB",store:"MediaWorld",country:"IT",condition:"new",price:1499,reference:1899,shipping:34,trust:89,errorRisk:15,url:"https://www.mediaworld.it/",reason:"Büyük ekran ve güçlü GPU. Kasa kalitesi ile fan sesi incelemeleri kontrol edilmeli."},
   {id:7,name:"RTX 4080 oyuncu bilgisayarı – 32 GB, 2 TB",store:"Leboncoin",country:"FR",condition:"used",price:1150,reference:1900,shipping:0,trust:62,errorRisk:58,url:"https://www.leboncoin.fr/",reason:"Olağan dışı ucuz. Elden teslim, donanım testi ve ödeme güvenliği olmadan alınmamalı."},
-  {id:8,name:"Custom Gaming PC – RX 7900 XT, Ryzen 7 7800X3D, 32 GB",store:"Wallapop",country:"ES",condition:"used",price:1320,reference:1780,shipping:40,trust:70,errorRisk:35,url:"https://www.wallapop.com/",reason:"Oyun performansı çok yüksek; NVIDIA gerektiren AI işlerinde aynı avantajı sağlamaz."}
+  {id:8,name:"Custom Gaming PC – RX 7900 XT, Ryzen 7 7800X3D, 32 GB",store:"Wallapop",country:"ES",condition:"used",price:1320,reference:1780,shipping:40,trust:70,errorRisk:35,url:"https://www.wallapop.com/",reason:"Oyun performansı çok yüksek; NVIDIA gerektiren AI işlerinde aynı avantajı sağlamaz."},
+  {id:9,name:"Gaming PC – Ryzen 7 7700, RTX 5070, 32 GB, 1 TB",store:"İtopya",country:"TR",condition:"new",price:1440,reference:1715,shipping:0,trust:89,errorRisk:11,url:"https://www.itopya.com/",reason:"Türkiye mağazalarındaki örnek fırsat. Karttaki € değerleri ülkeler arası karşılaştırmayı kolaylaştırmak için normalize edilmiştir."},
+  {id:10,name:"Lenovo Legion 5 – RTX 5060 Ti, 32 GB, 1 TB",store:"Hepsiburada",country:"TR",condition:"new",price:1310,reference:1575,shipping:0,trust:86,errorRisk:14,url:"https://www.hepsiburada.com/",reason:"Türkiye içi kargo avantajı olan örnek liste. Gerçek mağaza bağlantısı sonraki veri entegrasyonunda ürün sayfasına yönlendirilecektir."},
+  {id:11,name:"RTX 4070 Super oyuncu bilgisayarı – 32 GB, 1 TB",store:"Sahibinden",country:"TR",condition:"used",price:1080,reference:1480,shipping:25,trust:65,errorRisk:46,url:"https://www.sahibinden.com/",reason:"İkinci el örnek ilan. Fatura, seri numarası, yerinde test ve güvenli ödeme kontrolü yapılmalı."},
 ];
 
-const countryNames = {FR:"Fransa",DE:"Almanya",IT:"İtalya",ES:"İspanya",NL:"Hollanda"};
+const countryNames = {FR:"Fransa",DE:"Almanya",IT:"İtalya",ES:"İspanya",NL:"Hollanda",TR:"Türkiye"};
 const euro = new Intl.NumberFormat("tr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:0});
 
 const els = {

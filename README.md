@@ -3,7 +3,7 @@
 Avrupa genelinde ürün fiyatlarını, gerçek fiyat düşüşlerini ve toplam maliyeti karşılaştırmak için hazırlanmış mobil uyumlu PWA prototipi.
 
 ## Özellikler
-- Fransa, Almanya, İtalya, İspanya ve Hollanda
+- Fransa, Almanya, İtalya, İspanya, Hollanda ve Türkiye
 - Ürün, ülke, durum, maksimum fiyat ve minimum düşüş filtresi
 - Fırsat skoru
 - Yanlış fiyat olasılığı filtresi
