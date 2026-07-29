@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b1020" />
+  <meta name="description" content="Avrupa genelinde gerçek fırsatları, fiyat düşüşlerini ve toplam maliyeti karşılaştır." />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icons/icon-192.svg" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.svg" />
+  <link rel="stylesheet" href="./styles.css" />
+  <title>Deal Radar Pro</title>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <div class="logo">DR</div>
+      <div>
+        <h1>Deal Radar Pro</h1>
+        <p>Avrupa fırsat motoru</p>
+      </div>
+    </div>
+    <button id="installBtn" class="ghost hidden">Ana ekrana ekle</button>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div>
+        <span class="eyebrow">FR • DE • IT • ES • NL</span>
+        <h2>Gerçek fiyat düşüşlerini tek bağlantıda bul.</h2>
+        <p>Ürün, ülke, fiyat ve minimum indirim oranına göre filtrele. Sistem toplam maliyeti, fırsat skorunu ve olası yanlış fiyatları gösterir.</p>
+      </div>
+      <div class="hero-card">
+        <div class="metric">
+          <span>En yüksek düşüş</span>
+          <strong id="bestDrop">—</strong>
+        </div>
+        <div class="metric">
+          <span>En iyi skor</span>
+          <strong id="bestScore">—</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel filters">
+      <div class="field wide">
+        <label for="query">Ne arıyorsun?</label>
+        <input id="query" type="search" placeholder="Örn. RTX 5070, oyun bilgisayarı, iPhone..." />
+      </div>
+
+      <div class="field">
+        <label for="country">Ülke</label>
+        <select id="country">
+          <option value="all">Tümü</option>
+          <option value="FR">Fransa</option>
+          <option value="DE">Almanya</option>
+          <option value="IT">İtalya</option>
+          <option value="ES">İspanya</option>
+          <option value="NL">Hollanda</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="condition">Durum</label>
+        <select id="condition">
+          <option value="all">Sıfır + ikinci el</option>
+          <option value="new">Sıfır</option>
+          <option value="used">İkinci el</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="maxPrice">Maksimum fiyat (€)</label>
+        <input id="maxPrice" type="number" min="0" step="50" value="1500" />
+      </div>
+
+      <div class="field">
+        <label for="minDrop">Minimum düşüş (%)</label>
+        <input id="minDrop" type="number" min="0" max="95" step="1" value="0" />
+      </div>
+
+      <div class="field">
+        <label for="sortBy">Sıralama</label>
+        <select id="sortBy">
+          <option value="score">En iyi fırsat skoru</option>
+          <option value="drop">En yüksek düşüş</option>
+          <option value="price">En düşük toplam fiyat</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button id="applyBtn" class="primary">Fırsatları göster</button>
+        <button id="shareBtn" class="secondary">Bağlantıyı kopyala</button>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <div>
+        <strong id="resultCount">0 fırsat</strong>
+        <span id="activeFilterText">Filtreler uygulanmadı</span>
+      </div>
+      <label class="switch-row">
+        <input id="errorOnly" type="checkbox" />
+        <span>Yanlış fiyat olasılığı yüksek</span>
+      </label>
+    </section>
+
+    <section id="results" class="cards" aria-live="polite"></section>
+
+    <section class="panel roadmap">
+      <h3>Canlı sürüm yol haritası</h3>
+      <div class="roadmap-grid">
+        <div><b>1</b><span>Gerçek mağaza API ve affiliate bağlantıları</span></div>
+        <div><b>2</b><span>Fiyat geçmişi ve sahte indirim tespiti</span></div>
+        <div><b>3</b><span>Üyelik, favoriler ve fiyat alarmı</span></div>
+        <div><b>4</b><span>İkinci el ilan analizi ve pazarlık asistanı</span></div>
+      </div>
+    </section>
+  </main>
+
+  <template id="cardTemplate">
+    <article class="deal-card">
+      <div class="card-top">
+        <div>
+          <span class="country-badge"></span>
+          <span class="condition-badge"></span>
+        </div>
+        <div class="score"></div>
+      </div>
+
+      <h3 class="product-name"></h3>
+      <p class="store-name"></p>
+
+      <div class="price-row">
+        <div>
+          <span class="old-price"></span>
+          <strong class="current-price"></strong>
+        </div>
+        <div class="drop-badge"></div>
+      </div>
+
+      <div class="facts">
+        <div><span>Kargo</span><strong class="shipping"></strong></div>
+        <div><span>Toplam</span><strong class="total"></strong></div>
+        <div><span>Satıcı güveni</span><strong class="trust"></strong></div>
+        <div><span>Durum</span><strong class="signal"></strong></div>
+      </div>
+
+      <p class="reason"></p>
+
+      <div class="card-actions">
+        <button class="save-btn secondary">Kaydet</button>
+        <a class="go-btn primary" target="_blank" rel="noopener noreferrer">Ürüne git</a>
+      </div>
+    </article>
+  </template>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
