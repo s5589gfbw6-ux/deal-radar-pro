@@ -160,3 +160,29 @@ input:focus, select:focus { border-color:rgba(124,92,255,.75); box-shadow:0 0 0 
   .cards { grid-template-columns:1fr; }
   .roadmap-grid { grid-template-columns:1fr; }
 }
+
+.top-actions { display:flex; align-items:center; gap:8px; }
+.count-badge { min-width:22px; height:22px; padding:0 6px; display:inline-grid; place-items:center; margin-left:7px; border-radius:999px; background:var(--accent); font-size:.72rem; }
+.search-wrap { position:relative; }
+.recent-searches { position:absolute; left:0; right:0; top:calc(100% + 7px); z-index:20; padding:8px; border:1px solid var(--line); border-radius:14px; background:#111827; box-shadow:var(--shadow); }
+.recent-searches button { width:100%; display:flex; justify-content:space-between; border:0; padding:11px 12px; border-radius:10px; background:transparent; color:var(--text); text-align:left; cursor:pointer; }
+.recent-searches button:hover { background:rgba(255,255,255,.06); }
+.card-actions { grid-template-columns:1fr 1fr; }
+.card-actions .go-btn { grid-column:1/-1; }
+.drawer { position:fixed; top:0; right:0; z-index:40; width:min(430px, 92vw); height:100dvh; padding:20px; background:#0d1422; border-left:1px solid var(--line); box-shadow:-25px 0 70px rgba(0,0,0,.42); transform:translateX(105%); transition:transform .25s ease; overflow:auto; }
+.drawer.open { transform:translateX(0); }
+.drawer-head { display:flex; justify-content:space-between; gap:14px; align-items:flex-start; margin-bottom:18px; }
+.drawer-head h3 { margin:0; }
+.drawer-head p { margin:4px 0 0; color:var(--muted); font-size:.82rem; }
+.backdrop { position:fixed; inset:0; z-index:30; background:rgba(0,0,0,.56); backdrop-filter:blur(3px); }
+.favorites-list { display:grid; gap:10px; }
+.favorite-item { padding:14px; border:1px solid var(--line); border-radius:15px; background:rgba(255,255,255,.035); }
+.favorite-item h4 { margin:0 0 6px; line-height:1.35; }
+.favorite-item p { margin:0 0 10px; color:var(--muted); font-size:.8rem; }
+.favorite-item-actions { display:flex; gap:8px; }
+.favorite-item-actions a, .favorite-item-actions button { flex:1; }
+.modal { position:fixed; inset:0; z-index:50; display:grid; place-items:center; padding:18px; background:rgba(0,0,0,.68); }
+.modal-card { width:min(460px, 100%); border:1px solid var(--line); border-radius:20px; padding:20px; background:#0f1727; box-shadow:var(--shadow); }
+.full-btn { width:100%; margin-top:14px; }
+.modal-note { color:var(--muted); font-size:.78rem; line-height:1.45; }
+@media (max-width:620px){ .topbar .brand-wrap p { display:none; } .top-actions .ghost { padding:10px 11px; } }

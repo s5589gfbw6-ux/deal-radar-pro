@@ -20,7 +20,10 @@
         <p>Avrupa + Türkiye fırsat motoru</p>
       </div>
     </div>
-    <button id="installBtn" class="ghost hidden">Ana ekrana ekle</button>
+    <div class="top-actions">
+      <button id="favoritesBtn" class="ghost favorites-open">Favoriler <span id="favoritesCount" class="count-badge">0</span></button>
+      <button id="installBtn" class="ghost hidden">Ana ekrana ekle</button>
+    </div>
   </header>
 
   <main class="page">
@@ -45,7 +48,10 @@
     <section class="panel filters">
       <div class="field wide">
         <label for="query">Ne arıyorsun?</label>
-        <input id="query" type="search" placeholder="Örn. RTX 5070, oyun bilgisayarı, iPhone..." />
+        <div class="search-wrap">
+          <input id="query" type="search" autocomplete="off" placeholder="Örn. RTX 5070, oyun bilgisayarı, iPhone..." />
+          <div id="recentSearches" class="recent-searches hidden"></div>
+        </div>
       </div>
 
       <div class="field">
@@ -119,6 +125,28 @@
     </section>
   </main>
 
+  <aside id="favoritesDrawer" class="drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div><h3>Favoriler</h3><p>Kaydettiğin fırsatlar</p></div>
+      <button id="closeFavorites" class="ghost">Kapat</button>
+    </div>
+    <div id="favoritesList" class="favorites-list"></div>
+  </aside>
+  <div id="drawerBackdrop" class="backdrop hidden"></div>
+
+  <div id="alertModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="alertTitle">
+    <div class="modal-card">
+      <div class="drawer-head">
+        <div><h3 id="alertTitle">Fiyat alarmı</h3><p id="alertProductName"></p></div>
+        <button id="closeAlert" class="ghost">Kapat</button>
+      </div>
+      <label for="targetPrice">Hedef fiyat</label>
+      <input id="targetPrice" type="number" min="0" step="1" />
+      <button id="saveAlert" class="primary full-btn">Alarmı kaydet</button>
+      <p class="modal-note">Bu sürüm alarmı cihazında saklar. Canlı bildirimler hesap sistemi bağlandığında etkinleşecek.</p>
+    </div>
+  </div>
+
   <template id="cardTemplate">
     <article class="deal-card">
       <div class="card-top">
@@ -150,7 +178,8 @@
       <p class="reason"></p>
 
       <div class="card-actions">
-        <button class="save-btn secondary">Kaydet</button>
+        <button class="save-btn secondary">Favoriye ekle</button>
+        <button class="alert-btn secondary">Alarm kur</button>
         <a class="go-btn primary" target="_blank" rel="noopener noreferrer">Ürüne git</a>
       </div>
     </article>
